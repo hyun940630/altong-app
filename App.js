@@ -4,29 +4,41 @@ import { Root } from "native-base";
 // import * as Font from "expo-font";
 import { AppLoading } from "expo";
 
-// import thunk from "redux-thunk";
-import { Provider, connect } from "react-redux";
-import { createStore, applyMiddleware } from "redux";
-// import { createLogger } from "redux-logger";
+// Navigation
+import { createSwitchNavigator, createAppContainer } from "react-navigation";
+import StartScreen from "./src/screens/StartScreen";
+import InserUsertInfo from "./src/screens/InserUsertInfo";
+import TabNavigation from "./src/navigation/TabNavigation";
 
-import MainNavigation from "./src/navigation/MainNavigation";
+// using Redux
+import { Provider } from "react-redux";
+import { createStore } from "redux";
 import reducer from "./src/reducers/reducer";
+
+// import MainNavigation from "./src/navigation/MainNavigation";
 
 const store = createStore(reducer);
 
-console.log(store.getState());
+const View = createSwitchNavigator(
+  {
+    Start: { screen: StartScreen },
+    InsertInfo: { screen: InserUsertInfo },
+    Main: { screen: TabNavigation }
+  },
+  {
+    initialRouteName: "Start"
+  }
+);
 
-export default class App extends Component {
+console.log(store.getState());
+console.log(store.typeUsername, ": typeUsername"); // FIXME: current state: undefind
+
+class App extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
-      loaded: false,
-      username: ""
+      loaded: false
     };
-    this.store = createStore((state, action) => {
-      return { ...state, username: action.text };
-    });
   }
 
   handleError = error => console.log(error);
@@ -54,19 +66,16 @@ export default class App extends Component {
   };
 
   render() {
+    const Layout = createAppContainer(View);
     const { loaded } = this.state;
+
     return (
       <>
-        <StatusBar
-          backgroundColor="white"
-          barStyle="dark-content"
-          backgroundColor={"transparent"}
-          translucent={true}
-        />
+        <StatusBar backgroundColor="#3250AE" barStyle="light-content" />
         {loaded ? (
           <Root>
             <Provider store={store}>
-              <MainNavigation />
+              <Layout />
             </Provider>
           </Root>
         ) : (
@@ -80,3 +89,5 @@ export default class App extends Component {
     );
   }
 }
+
+export default App;
