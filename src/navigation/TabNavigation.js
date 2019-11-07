@@ -46,9 +46,6 @@ const TabNavigation = createBottomTabNavigator(
     }
   },
   {
-    // animationEnabled: true,
-    // swipeEnabled: true,
-    // tabBarPosition: "bottom",
     tabBarOptions: {
       activeTintColor: "#3250AE",
       inactiveTintColor: "#d1cece",

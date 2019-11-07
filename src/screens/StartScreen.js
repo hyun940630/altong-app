@@ -26,7 +26,7 @@ export default class StartScreen extends Component {
           </View>
         </View>
         <TouchableOpacity style={{ paddingTop: 50 }}>
-          <Text style={styles.startbtn} onPress={() => navigate("InsertInfo1")}>
+          <Text style={styles.startbtn} onPress={() => navigate("InsertInfo")}>
             시작하기
           </Text>
         </TouchableOpacity>
