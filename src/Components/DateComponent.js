@@ -33,6 +33,7 @@ export default class DateComponent extends Component {
         "."
     });
   };
+
   componentWillUnmount() {
     clearInterval(this.timer);
   }

@@ -1,10 +1,26 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity
+  // AsyncStorage
+} from "react-native";
 
 export default class StartScreen extends Component {
   static navigationOptions = {
     header: null
   };
+
+  // componentDidMount() {
+  //   // this.props.insertUserInfo();
+  //   AsyncStorage.getItem("username").then(value => {
+  //     if (value != null) {
+  //       console.log(value);
+  //       this.props.navigation.navigate("Home");
+  //     }
+  //   });
+  // }
 
   render() {
     const { navigate } = this.props.navigation;
@@ -25,10 +41,11 @@ export default class StartScreen extends Component {
             <Text style={{ fontSize: 38, color: "#333" }}>입니다.</Text>
           </View>
         </View>
-        <TouchableOpacity style={{ paddingTop: 50 }}>
-          <Text style={styles.startbtn} onPress={() => navigate("InsertInfo")}>
-            시작하기
-          </Text>
+        <TouchableOpacity
+          style={{ paddingTop: 50 }}
+          onPress={() => navigate("InsertUserInfo")}
+        >
+          <Text style={styles.startbtn}>시작하기</Text>
         </TouchableOpacity>
       </View>
     );

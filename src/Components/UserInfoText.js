@@ -1,21 +1,22 @@
 import React, { Component } from "react";
 import { StyleSheet, TextInput } from "react-native";
 
-handleChange = e => {
-  this.setState({ text: e.target.value });
-};
+// handleChange = e => {
+//   this.setState({ text: e.target.value });
+// };
 
-const _handleChange = (state, props) => {
-  return { text: state.props };
-};
+// const _handleChange = props => {
+//   return { text: props };
+// };
 
-function UserInfoText({ placeholder, style, text, autoFocus }) {
+function UserInfoText(props) {
   return (
     <TextInput
-      autoFocus={autoFocus}
-      placeholder={placeholder}
-      style={style}
-      onChange={_handleChange}
+      // autoFocus={autoFocus}
+      // placeholder={placeholder}
+      // style={style}
+      // onChange={_handleChange}
+      {...props}
     >
       {text}
     </TextInput>

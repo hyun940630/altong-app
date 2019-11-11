@@ -1,10 +1,15 @@
 import React, { Component } from "react";
 import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
-import DateComponent from "./DateComponent";
 
-export default class CardCompnent extends Component {
+export default class BeforeGotoWork extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
-    const { name, workplace } = this.props;
+    const { name, workplace, onPress } = this.props;
+    let today = new Date().toLocaleString();
+    console.log(today);
     return (
       <View style={styles.container}>
         <View style={styles.content}>
@@ -25,6 +30,7 @@ export default class CardCompnent extends Component {
             style={{
               marginTop: 40
             }}
+            onPress={onPress}
           >
             <Text style={styles.gotoWorkBtn}>출근하기</Text>
           </TouchableOpacity>

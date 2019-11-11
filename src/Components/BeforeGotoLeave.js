@@ -1,9 +1,59 @@
 import React, { Component } from "react";
-import { View, TouchableOpacity, Text, StyleSheet } from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  AsyncStorage
+} from "react-native";
 
-export default class CardCompnent extends Component {
+function formatTime(time) {
+  var minutes = Math.floor(time / 60);
+  time -= minutes * 60;
+
+  var seconds = parseInt(time % 60, 10);
+
+  return `${minutes < 10 ? `0${minutes}` : minutes}:${
+    seconds < 10 ? `0${seconds}` : seconds
+  }`;
+
+  return;
+}
+
+export default class BeforeGotoLeave extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      earningMoney: 0,
+      todayTime: 0,
+      start: true
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const currentProps = this.props;
+    if (!currentProps.start && nextProps.start) {
+      const timerInterval = setInterval(() => {
+        currentProps.addSecond();
+      }, 1000);
+      this.setState({
+        interval: timerInterval
+      });
+    } else if (currentProps.start && !nextProps.start) {
+      clearInterval(this.state.interval);
+    }
+  }
+
   render() {
-    const { name, earningMoney, todayTime } = this.props;
+    const {
+      name,
+      workplace,
+      earningMoney,
+      todayTime,
+      onPress,
+      start
+    } = this.props;
+
     return (
       <View style={styles.container}>
         <View style={styles.content}>
@@ -20,7 +70,7 @@ export default class CardCompnent extends Component {
             }}
           >
             <Text style={[styles.text, { fontWeight: "bold" }]}>
-              {earningMoney}원
+              {/* {start ? earningMoney : null}원 */}
             </Text>
             <Text style={styles.text}>벌었어요.</Text>
 
@@ -49,12 +99,20 @@ export default class CardCompnent extends Component {
             >
               <Text style={styles.smallText}>현재 </Text>
               <Text style={[styles.smallText, { fontWeight: "bold" }]}>
-                {todayTime}분
+                {start ? todayTime : "0"}분
               </Text>
               <Text style={styles.smallText}> 근무하고 있어요.</Text>
             </View>
           </View>
-          <TouchableOpacity style={{ marginTop: 40 }}>
+          <TouchableOpacity
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+            onPress={onPress}
+          >
+            <Text style={styles.text}>{workplace}</Text>
             <Text style={styles.gotoLeaveBtn}>퇴근하기</Text>
           </TouchableOpacity>
         </View>
@@ -70,7 +128,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff"
   },
   content: {
-    height: 450,
+    height: 400,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "flex-end",

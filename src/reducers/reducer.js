@@ -1,58 +1,58 @@
 // Actions
-const INSERT_USERNAME = "INSERT_USERNAME";
-const INSERT_USERWORKPLACE = "INSERT_USERWORKPLACE";
-
-// Action Creators
-const insertUsername = text => ({
-  return: { type: INSERT_USERNAME, username: text }
-});
-
-const insertUserworkplace = text => ({
-  return: { type: INSERT_USERWORKPLACE, userworkplace: text }
-});
+export const INSERT_USERINFO = "INSERT_USERINFO";
+export const SET_USERINFO = "SET_USERINFO";
 
 // Reducer
 
 const initialState = {
-  username: "",
-  userworkplace: ""
+  user: {
+    username: "",
+    userworkplace: ""
+  }
 };
 
 // action을 보낼 때마다 자동으로 리듀서를 실행함
 // 리덕스는 자동으로 액션을 리듀서로 보냄
-const reducer = (state = initialState, action) => {
+export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case INSERT_USERNAME:
-      return applyInsertUsername(state, action);
-    case INSERT_USERWORKPLACE:
-      return applyInsertUserworkplace(state, action);
+    case INSERT_USERINFO:
+      console.log(state);
+      return {
+        ...state,
+        user: {
+          username: action.payload,
+          userworkplace: action.payload
+        }
+      };
+    case SET_USERINFO:
+      return {
+        ...state,
+        user: {
+          username,
+          userworkplace
+        }
+      };
     default:
       return state;
   }
-};
-console.log(reducer(initialState, applyInsertUsername), " : Current_State");
+}
 
 // Reducer Functions
 
-function applyInsertUsername(state, action) {
-  return {
-    ...state,
-    username: action.text
-  };
-}
+// Action Creators
+export const insertUserInfo = user => {
+  return { type: INSERT_USERINFO, payload: user };
+};
 
-function applyInsertUserworkplace(state, action) {
-  return {
-    ...state,
-    userworkplace: action.text
-  };
-}
+// export const setUserInfo = user => {
+//   return { type: SET_USERINFO, payload: user };
+// };
 
 // Export
 
-export const altongActions = {
-  insertUsername,
-  insertUserworkplace
-};
+// export const actionCreators = {
+//   insertUsername,
+//   insertUserworkplace
+// };
 
-export default reducer;
+// export default reducer;
