@@ -26,13 +26,6 @@ class InsertUserInfo extends Component {
     };
   }
 
-  componentDidMount() {
-    // this.props.insertUserInfo();
-    // AsyncStorage.getItem("username").then(value =>
-    //   this.setState({ username: value })
-    // );
-  }
-
   setName = value => {
     AsyncStorage.setItem("username", value);
     this.setState({ username: value });
@@ -119,6 +112,7 @@ class InsertUserInfo extends Component {
                         : styles.noSelectText
                     }
                   >
+                    {" "}
                     세후월급
                   </Text>
                 </TouchableOpacity>

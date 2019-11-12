@@ -1,32 +1,30 @@
-import React, { Component } from "react";
+import React from "react";
 import { View, StyleSheet, AsyncStorage } from "react-native";
-import { Container } from "native-base";
-import Icon from "react-native-vector-icons/Ionicons";
+// import { Container } from "native-base";
 
 import DateComponent from "../DateComponent";
 import BeforeGotoWork from "../BeforeGotoWork";
 import BeforeGotoLeave from "../BeforeGotoLeave";
 import MapViewComponent from "../MapViewComponent";
 
-export default class HomeTab extends Component {
-  static navigationOptions = {
-    tabBarIcon: ({ tintColor }) => (
-      <Icon name="md-home" style={{ color: tintColor, fontSize: 28 }} />
-    )
-  };
-
+class HomeTab extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      start: false,
+      isWorking: false,
       checkPoint: false,
       username: "",
       userworkplace: "",
-      usersalary: 0
+      balance: 0,
+      timeWorkedInMS: 0,
+      startTime: {},
+      endTime: ""
     };
   }
 
   componentDidMount = () => {
+    // Getting data in the AsyncStorage
     AsyncStorage.getItem("username").then(value =>
       this.setState({ username: value })
     );
@@ -35,26 +33,97 @@ export default class HomeTab extends Component {
     );
   };
 
-  handleStart = () => this.setState({ start: true });
+  componentWillUnmount = () => {
+    this.setState({ isWorking: false }, () => {});
+  };
 
-  handleEnd = () => this.setState({ start: false, checkPoint: false });
+  _startWorking = () => {
+    this.setState({ isWorking: true }, () => {
+      this._startTimer();
+      this._recordStartTime();
+    });
+  };
+
+  _stopWorking = () => {
+    this.setState({ isWorking: false }, () => {});
+  };
+
+  _startTimer = () => {
+    let timer = setInterval(() => {
+      this.setState({ timeWorkedInMS: this.state.timeWorkedInMS + 100 });
+      if (!this.state.isWorking) clearInterval(timer);
+      this._recordEndTime();
+    }, 100);
+  };
+
+  _recordStartTime = value => {
+    const d = new Date();
+    value = d.getHours + ":" + d.getMinutes;
+    AsyncStorage.setItem("startTime", value);
+    this.setState({ startTime: value });
+  };
+
+  _recordEndTime = value => {
+    AsyncStorage.setItem("endTime", value);
+    this.setState({ endTime: value });
+  };
+
+  _getFormattedTime = () => {
+    let timeInMS = this.state.timeWorkedInMS;
+    let hour,
+      min,
+      sec,
+      deciSec = 0;
+
+    hour = Math.floor(timeInMS / 3600000);
+    timeInMS = timeInMS - 3600000 * hour;
+    min = Math.floor(timeInMS / 60000);
+    timeInMS = timeInMS - 60000 * min;
+    sec = Math.floor(timeInMS / 1000);
+    timeInMS = timeInMS - 1000 * sec;
+    deciSec = Math.floor(timeInMS / 100);
+
+    return `${hour}시간 ${min}분 ${sec}.${deciSec}초`;
+  };
+
+  _getFormattedBalance = () => {
+    // await this.setState({balance: });
+
+    return this._formatMoney(
+      Math.floor((this.props.wage / 3600000) * this.state.timeWorkedInMS)
+    );
+  };
+
+  _formatMoney(num) {
+    if (isNaN(num)) {
+      return "NaN";
+    }
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+  }
+
+  // handleStart = () => this.setState({ isWorking: true });
+
+  // handleEnd = () => this.setState({ isWorking: false, checkPoint: false });
 
   handleCheckPoint = () => this.setState({ checkPoint: true });
 
   render() {
-    const { start, checkPoint } = this.state;
+    const { isWorking, checkPoint } = this.state;
+    const { dateStyle } = this.props;
 
     return (
-      <Container>
+      <>
         <View style={styles.dateCom}>
-          <DateComponent />
+          <DateComponent style={styles.dateStyle} />
         </View>
-        {start ? (
+        {isWorking ? (
           checkPoint ? (
             <BeforeGotoLeave
               name={this.state.username}
               workplace={this.state.userworkplace}
-              onPress={this.handleEnd}
+              onPress={this._stopWorking}
+              balance={this._getFormattedBalance()}
+              timer={this._getFormattedTime()}
             />
           ) : (
             <MapViewComponent onPress={this.handleCheckPoint} />
@@ -63,10 +132,10 @@ export default class HomeTab extends Component {
           <BeforeGotoWork
             name={this.state.username}
             workplace={this.state.userworkplace}
-            onPress={this.handleStart}
+            onPress={this._startWorking}
           />
         )}
-      </Container>
+      </>
     );
   }
 }
@@ -75,7 +144,14 @@ const styles = StyleSheet.create({
   dateCom: {
     height: 50,
     marginTop: 50,
-    marginBottom: 80,
+    marginBottom: 50,
     justifyContent: "center"
+  },
+  dateStyle: {
+    paddingLeft: 24,
+    fontSize: 30,
+    color: "#333"
   }
 });
+
+export default HomeTab;

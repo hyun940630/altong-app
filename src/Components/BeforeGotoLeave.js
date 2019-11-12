@@ -7,52 +7,19 @@ import {
   AsyncStorage
 } from "react-native";
 
-function formatTime(time) {
-  var minutes = Math.floor(time / 60);
-  time -= minutes * 60;
-
-  var seconds = parseInt(time % 60, 10);
-
-  return `${minutes < 10 ? `0${minutes}` : minutes}:${
-    seconds < 10 ? `0${seconds}` : seconds
-  }`;
-
-  return;
-}
-
 export default class BeforeGotoLeave extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      earningMoney: 0,
-      todayTime: 0,
-      start: true
+      start: true,
+      isWorking: true,
+      balance: 0,
+      timeWorkedInMS: 0
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    const currentProps = this.props;
-    if (!currentProps.start && nextProps.start) {
-      const timerInterval = setInterval(() => {
-        currentProps.addSecond();
-      }, 1000);
-      this.setState({
-        interval: timerInterval
-      });
-    } else if (currentProps.start && !nextProps.start) {
-      clearInterval(this.state.interval);
-    }
-  }
-
   render() {
-    const {
-      name,
-      workplace,
-      earningMoney,
-      todayTime,
-      onPress,
-      start
-    } = this.props;
+    const { name, onPress, balance, timer } = this.props;
 
     return (
       <View style={styles.container}>
@@ -70,7 +37,7 @@ export default class BeforeGotoLeave extends Component {
             }}
           >
             <Text style={[styles.text, { fontWeight: "bold" }]}>
-              {/* {start ? earningMoney : null}원 */}
+              {balance}원
             </Text>
             <Text style={styles.text}>벌었어요.</Text>
 
@@ -85,6 +52,7 @@ export default class BeforeGotoLeave extends Component {
                   marginBottom: 50
                 }}
                 // 바로간편출금 스크린으로 연결할 것!!
+                onPress={() => alert("준비중입니다.")}
               >
                 바로간편출금
               </Text>
@@ -99,7 +67,7 @@ export default class BeforeGotoLeave extends Component {
             >
               <Text style={styles.smallText}>현재 </Text>
               <Text style={[styles.smallText, { fontWeight: "bold" }]}>
-                {start ? todayTime : "0"}분
+                {timer}
               </Text>
               <Text style={styles.smallText}> 근무하고 있어요.</Text>
             </View>
@@ -112,7 +80,6 @@ export default class BeforeGotoLeave extends Component {
             }}
             onPress={onPress}
           >
-            <Text style={styles.text}>{workplace}</Text>
             <Text style={styles.gotoLeaveBtn}>퇴근하기</Text>
           </TouchableOpacity>
         </View>

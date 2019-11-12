@@ -8,8 +8,6 @@ export default class BeforeGotoWork extends Component {
 
   render() {
     const { name, workplace, onPress } = this.props;
-    let today = new Date().toLocaleString();
-    console.log(today);
     return (
       <View style={styles.container}>
         <View style={styles.content}>

@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 export default class DateComponent extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = { currentDate: null, currentDay: null };
     this.wek = ["일", "월", "화", "수", "목", "금", "토"];
   }
@@ -56,7 +56,6 @@ const styles = StyleSheet.create({
   date: {
     paddingLeft: 24,
     fontSize: 30,
-    color: "#333",
-    fontWeight: "300"
+    color: "#333"
   }
 });

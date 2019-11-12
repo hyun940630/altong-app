@@ -19,12 +19,6 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
-    },
-    "android": {
-      "package": "com.패키지명.패키지명",
-      "config": {
-        "googleMaps": { "apiKey": "AIzaSyBEBIPY91KHGP-N0qhvgXo47iu5M-q6NJc" }
-      }
     }
   }
 }
