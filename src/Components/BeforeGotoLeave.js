@@ -36,9 +36,7 @@ export default class BeforeGotoLeave extends Component {
               alignItems: "flex-end"
             }}
           >
-            <Text style={[styles.text, { fontWeight: "bold" }]}>
-              {balance}원
-            </Text>
+            <Text style={styles.textBold}>{balance}원</Text>
             <Text style={styles.text}>벌었어요.</Text>
 
             <TouchableOpacity>
@@ -47,7 +45,7 @@ export default class BeforeGotoLeave extends Component {
                   height: 45,
                   fontSize: 34,
                   color: "#DDDDDD",
-                  fontWeight: "bold",
+                  fontFamily: "noto-sans-bold",
                   marginTop: 50,
                   marginBottom: 50
                 }}
@@ -105,16 +103,22 @@ const styles = StyleSheet.create({
     color: "#333",
     fontSize: 34,
     color: "#3250AE", // identity color
-    fontWeight: "bold"
+    fontFamily: "noto-sans-bold"
   },
   text: {
     color: "#333",
+    fontFamily: "noto-sans",
     fontSize: 34
+  },
+  smallText: {
+    color: "#333",
+    fontFamily: "noto-sans",
+    fontSize: 16
   },
   gotoLeaveBtn: {
     fontSize: 34,
     padding: 5,
     color: "#3250AE",
-    fontWeight: "bold"
+    fontFamily: "noto-sans-bold"
   }
 });

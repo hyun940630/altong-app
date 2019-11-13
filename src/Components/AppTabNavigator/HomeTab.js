@@ -1,7 +1,6 @@
 import React from "react";
 import { View, StyleSheet, AsyncStorage } from "react-native";
-// import { Container } from "native-base";
-
+import AsyncStorageModule from "../../StorageModule/AsyncStorageModule";
 import DateComponent from "../DateComponent";
 import BeforeGotoWork from "../BeforeGotoWork";
 import BeforeGotoLeave from "../BeforeGotoLeave";
@@ -18,7 +17,7 @@ class HomeTab extends React.Component {
       userworkplace: "",
       balance: 0,
       timeWorkedInMS: 0,
-      startTime: {},
+      startTime: "",
       endTime: ""
     };
   }
@@ -38,34 +37,34 @@ class HomeTab extends React.Component {
   };
 
   _startWorking = () => {
-    this.setState({ isWorking: true }, () => {
-      this._startTimer();
-      this._recordStartTime();
-    });
+    this.setState({ isWorking: true });
+    this._recordStartTime();
   };
 
   _stopWorking = () => {
-    this.setState({ isWorking: false }, () => {});
+    this.setState({ isWorking: false });
+    this._recordEndTime();
+  };
+
+  _recordStartTime = () => {
+    const d = new Date();
+    value = d.getTime();
+    AsyncStorageModule.setItem("startTime", value);
+    this.setState({ startTime: value });
+  };
+
+  _recordEndTime = () => {
+    const d = new Date();
+    value = d.getTime();
+    AsyncStorageModule.setItem("endTime", value);
+    this.setState({ endTime: value });
   };
 
   _startTimer = () => {
     let timer = setInterval(() => {
       this.setState({ timeWorkedInMS: this.state.timeWorkedInMS + 100 });
       if (!this.state.isWorking) clearInterval(timer);
-      this._recordEndTime();
     }, 100);
-  };
-
-  _recordStartTime = value => {
-    const d = new Date();
-    value = d.getHours + ":" + d.getMinutes;
-    AsyncStorage.setItem("startTime", value);
-    this.setState({ startTime: value });
-  };
-
-  _recordEndTime = value => {
-    AsyncStorage.setItem("endTime", value);
-    this.setState({ endTime: value });
   };
 
   _getFormattedTime = () => {
@@ -109,7 +108,8 @@ class HomeTab extends React.Component {
 
   render() {
     const { isWorking, checkPoint } = this.state;
-    const { dateStyle } = this.props;
+
+    console.log(this.state.startTime + " " + this.state.endTime);
 
     return (
       <>
@@ -150,7 +150,8 @@ const styles = StyleSheet.create({
   dateStyle: {
     paddingLeft: 24,
     fontSize: 30,
-    color: "#333"
+    color: "#333",
+    fontFamily: "noto-sans"
   }
 });
 

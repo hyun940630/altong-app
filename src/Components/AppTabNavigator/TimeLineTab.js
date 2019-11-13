@@ -25,7 +25,10 @@ export default class TimeLineTab extends Component {
 
         <View style={styles.paper}>
           <Text
-            style={[styles.paperText, { fontSize: 20, fontWeight: "bold" }]}
+            style={[
+              styles.paperText,
+              { fontSize: 20, fontFamily: "noto-sans-bold" }
+            ]}
           >
             {userworkplace}
           </Text>
@@ -56,6 +59,7 @@ const styles = StyleSheet.create({
   paperText: {
     color: "#FFFFFF",
     fontSize: 16,
+    fontFamily: "noto-sans",
     alignItems: "center",
     paddingLeft: 24,
     paddingTop: 6,

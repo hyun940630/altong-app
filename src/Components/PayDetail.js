@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontFamily: "noto-sans-bold",
     justifyContent: "flex-start",
     borderBottomWidth: 2,
     borderBottomColor: "#353535",
@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
   text: {
     color: "#333",
     fontSize: 14,
+    fontFamily: "noto-sans",
     padding: 4
   }
 });

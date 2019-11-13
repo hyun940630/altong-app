@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  AsyncStorage
+} from "react-native";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import TitleComponet from "../TitleCard";
 
@@ -7,13 +13,26 @@ export default class ProfileTab extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      username: "",
       appDes: false
     };
   }
+
+  componentDidMount = () => {
+    // Getting data in the AsyncStorage
+    AsyncStorage.getItem("username").then(value =>
+      this.setState({ username: value })
+    );
+  };
+
   _toggleAppDes = () => {
     this.setState({ appDes: true });
   };
+
   render() {
+    const { navigate } = this.props.navigation;
+    const { username } = this.state;
+
     return (
       <View style={styles.container}>
         <TitleComponet name="마이페이지" />
@@ -48,24 +67,35 @@ export default class ProfileTab extends Component {
                 <Text
                   style={{
                     fontSize: 16,
-                    fontWeight: "bold",
+                    fontFamily: "noto-sans-bold",
                     color: "#FFFFFF"
                   }}
                 >
-                  황현
+                  {username}
                 </Text>
                 {/* <Text style={{ fontSize: 14, color: "#FFFFFF" }}>
                   010-2553-1234
                 </Text> */}
                 <TouchableOpacity>
-                  <Text style={{ fontSize: 14, color: "#FFF" }}>
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: "#FFF",
+                      fontFamily: "noto-sans-bold"
+                    }}
+                    onPress={() => navigate("EditProfile")}
+                  >
                     개인정보 수정하기
                   </Text>
                 </TouchableOpacity>
               </View>
               <Icon
                 name="arrow-right"
-                style={{ fontSize: 16, color: "#FFFFFF" }}
+                style={{
+                  fontSize: 16,
+                  color: "#FFFFFF",
+                  fontFamily: "noto-sans"
+                }}
               ></Icon>
             </View>
           </View>
@@ -77,7 +107,11 @@ export default class ProfileTab extends Component {
             {this.state.appDes ? null : (
               <Icon
                 name="arrow-right"
-                style={{ fontSize: 18, color: "#3250AE" }}
+                style={{
+                  fontSize: 18,
+                  fontFamily: "noto-sans",
+                  color: "#3250AE"
+                }}
               ></Icon>
             )}
           </TouchableOpacity>
@@ -94,7 +128,14 @@ export default class ProfileTab extends Component {
                 style={{ justifyContent: "flex-end", alignItems: "flex-end" }}
                 onPress={() => this.setState({ appDes: false })}
               >
-                <Text style={{ fontSize: 17, color: "#3250AE", padding: 5 }}>
+                <Text
+                  style={{
+                    fontSize: 17,
+                    color: "#3250AE",
+                    fontFamily: "noto-sans",
+                    padding: 5
+                  }}
+                >
                   접기
                 </Text>
               </TouchableOpacity>
@@ -104,19 +145,29 @@ export default class ProfileTab extends Component {
             <Text style={styles.settingDetail}>개인정보처리방침</Text>
             <Icon
               name="arrow-right"
-              style={{ fontSize: 18, color: "#3250AE" }}
+              style={{
+                fontSize: 18,
+                color: "#3250AE",
+                fontFamily: "noto-sans-bold"
+              }}
             ></Icon>
           </View>
           <View style={styles.setting}>
             <Text style={styles.settingDetail}>로그아웃</Text>
             <Icon
               name="arrow-right"
-              style={{ fontSize: 18, color: "#3250AE" }}
+              style={{
+                fontSize: 18,
+                color: "#3250AE",
+                fontFamily: "noto-sans-bold"
+              }}
             ></Icon>
           </View>
           <View style={styles.setting}>
             <Text style={styles.settingDetail}>현재버전</Text>
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>v. 0.1</Text>
+            <Text style={{ fontSize: 16, fontFamily: "noto-sans-bold" }}>
+              v. 0.1
+            </Text>
           </View>
         </View>
       </View>
@@ -162,7 +213,8 @@ const styles = StyleSheet.create({
     borderBottomColor: "#EEEEEE"
   },
   settingDetail: {
-    fontSize: 18
+    fontSize: 18,
+    fontFamily: "noto-sans"
   },
   appDesText: {
     marginTop: 10,
@@ -172,6 +224,7 @@ const styles = StyleSheet.create({
   },
   appDesInnerText: {
     fontSize: 15,
+    fontFamily: "noto-sans",
     color: "#333",
     padding: 4
   }

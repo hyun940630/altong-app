@@ -1,14 +1,25 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, AsyncStorage } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import TitleCard from "../TitleCard";
 // import DateArrangeComponent from "../DateArrangeComponent";
 // import PayDetail from "../PayDetail";
 
 export default class AltongPayTab extends Component {
-  state = {
-    money: 0
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: ""
+    };
+  }
+
+  componentDidMount = () => {
+    // Getting data in the AsyncStorage
+    AsyncStorage.getItem("username").then(value =>
+      this.setState({ username: value })
+    );
   };
+
   render() {
     return (
       <View style={styles.container}>
@@ -16,7 +27,9 @@ export default class AltongPayTab extends Component {
 
         <View style={styles.paper}>
           <View>
-            <Text style={styles.paperTitle}>황현님의 총 알통페이</Text>
+            <Text style={styles.paperTitle}>
+              {this.state.username}님의 총 알통페이
+            </Text>
             {/* <Text style={styles.altongpay}>{this.state.money}원</Text> */}
             <Text style={styles.altongpayTemp}>준비중입니다.</Text>
           </View>
@@ -53,7 +66,7 @@ const styles = StyleSheet.create({
   paperTitle: {
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "noto-sans-bold",
     height: 60,
     textAlign: "center",
     alignItems: "center",
@@ -62,7 +75,7 @@ const styles = StyleSheet.create({
   altongpayTemp: {
     height: 80,
     fontSize: 36,
-    fontWeight: "bold",
+    fontFamily: "noto-sans-bold",
     color: "#FFFFFF",
     textAlign: "center",
     alignItems: "center",
@@ -71,7 +84,7 @@ const styles = StyleSheet.create({
   altongpay: {
     height: 80,
     fontSize: 44,
-    fontWeight: "bold",
+    fontFamily: "noto-sans-bold",
     color: "#FFFFFF",
     textAlign: "center",
     alignItems: "center",
@@ -88,6 +101,7 @@ const styles = StyleSheet.create({
   },
   possiblePay: {
     color: "#FFFFFF",
+    fontFamily: "noto-sans",
     fontSize: 14
   }
 });

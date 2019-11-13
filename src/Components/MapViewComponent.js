@@ -89,11 +89,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     alignItems: "center",
     justifyContent: "center",
-    borderBottomColor: "#3250AE"
+    borderBottomColor: "#3250AE",
+    zIndex: 100
   },
   mapStyle: {
     width: Dimensions.get("window").width / 1,
-    height: Dimensions.get("window").height / 1.2,
+    height: Dimensions.get("window").height / 1.4,
     position: "absolute",
     top: 0,
     left: 0,
@@ -116,6 +117,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 12,
     fontSize: 20,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    zIndex: 1000
   }
 });

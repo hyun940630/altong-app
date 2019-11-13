@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, AsyncStorage } from "react-native";
+import AsyncStorageModule from "../StorageModule/AsyncStorageModule";
 import DateComponent from "../Components/DateComponent";
 
 class Des extends Component {
@@ -20,7 +21,8 @@ class Des extends Component {
         <Text
           style={{
             width: 60,
-            fontSize: 16
+            fontSize: 16,
+            fontFamily: "noto-sans"
           }}
         >
           {this.props.name}
@@ -48,11 +50,12 @@ export default class WorkRecordItem extends Component {
     AsyncStorage.getItem("endTime").then(value =>
       this.setState({ endTime: value })
     );
+    AsyncStorageModule.getItem("startTime");
+    AsyncStorageModule.getItem("endTime");
   };
 
   render() {
-    const { startTime, endTime } = this.props;
-    console.log(typeof endTime);
+    const { startTime, endTime } = this.state;
     const workingHours = endTime - startTime;
     return (
       <View style={styles.recGroup}>
@@ -107,7 +110,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontFamily: "noto-sans-bold",
     justifyContent: "flex-start",
     paddingBottom: 10
   },

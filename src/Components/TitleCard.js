@@ -22,6 +22,6 @@ const styles = StyleSheet.create({
   text: {
     color: "#333",
     fontSize: 20,
-    fontWeight: "bold"
+    fontFamily: "noto-sans-bold"
   }
 });

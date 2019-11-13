@@ -54,16 +54,17 @@ const styles = StyleSheet.create({
   textBold: {
     fontSize: 34,
     color: "#3250AE", // identity color
-    fontWeight: "bold"
+    fontFamily: "noto-sans-bold"
   },
   text: {
     color: "#333",
+    fontFamily: "noto-sans",
     fontSize: 34
   },
   gotoWorkBtn: {
     fontSize: 34,
     padding: 5,
     color: "#3250AE",
-    fontWeight: "bold"
+    fontFamily: "noto-sans-bold"
   }
 });

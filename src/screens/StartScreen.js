@@ -39,7 +39,7 @@ export default class StartScreen extends Component {
             }}
           >
             <Text style={styles.title}>알통</Text>
-            <Text style={{ fontSize: 38, color: "#333" }}>입니다.</Text>
+            <Text style={[styles.text, { paddingLeft: 0 }]}>입니다.</Text>
           </View>
         </View>
         <TouchableOpacity
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: "#3250AE",
-    fontWeight: "bold",
+    fontFamily: "noto-sans-bold",
     paddingLeft: 24,
     fontSize: 34
   },
@@ -72,16 +72,17 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 34,
     color: "#333",
-    paddingLeft: 24
+    paddingLeft: 24,
+    fontFamily: "noto-sans"
   },
   bold: {
-    fontWeight: "bold",
-    color: "#3250AE"
+    color: "#3250AE",
+    fontFamily: "noto-sans-bold"
   },
   startbtn: {
     fontSize: 34,
     paddingLeft: 24,
-    fontWeight: "bold",
-    color: "#3250AE"
+    color: "#3250AE",
+    fontFamily: "noto-sans-bold"
   }
 });

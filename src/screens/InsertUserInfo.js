@@ -123,15 +123,15 @@ class InsertUserInfo extends Component {
             <View style={{ flexDirection: "row" }}>
               <TextInput
                 placeholder="급여"
-                // autoFocus={true}
+                autoFocus={true}
                 style={{
                   height: 45,
                   minWidth: 50,
                   textAlign: "center",
                   width: "auto",
-                  fontSize: 34,
+                  fontSize: 32,
                   color: "#3250AE",
-                  fontWeight: "bold",
+                  fontFamily: "noto-sans-bold",
                   borderBottomColor: "#e2e2e2",
                   borderBottomWidth: 2
                 }}
@@ -224,62 +224,40 @@ const styles = StyleSheet.create({
   },
   textBold: {
     color: "#3250AE",
-    fontSize: 34,
-    fontWeight: "bold"
+    fontSize: 32,
+    fontFamily: "noto-sans-bold"
   },
   text: {
     color: "#333",
-    fontSize: 34
+    fontSize: 32,
+    fontFamily: "noto-sans"
   },
   usernameInput: {
-    height: 50,
+    height: 40,
     minWidth: 70,
     width: "auto",
     maxWidth: 300,
-    fontSize: 34,
+    fontSize: 32,
     color: "#3250AE",
-    fontWeight: "bold",
+    fontFamily: "noto-sans-bold",
     borderBottomColor: "#e2e2e2",
     borderBottomWidth: 2
   },
   workspaceInput: {
-    height: 50,
+    height: 40,
     minWidth: 120,
     width: "auto",
-    fontSize: 34,
+    fontSize: 32,
     color: "#3250AE",
-    fontWeight: "bold",
+    fontFamily: "noto-sans-bold",
     borderBottomColor: "#e2e2e2",
     borderBottomWidth: 2
   },
   noSelectText: {
-    fontSize: 34,
-    color: "#CCCCCC"
+    fontSize: 32,
+    color: "#CCCCCC",
+    fontFamily: "noto-sans"
   }
 });
-
-// const mapStateToProps = state => {
-//   let { user } = state;
-//   return {
-//     username: user.username,
-//     userworkplace: user.workplace
-//   };
-// };
-
-// // const mapDispatchToProps = user => {
-// //   insertUserInfo(user);
-// // };
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     setSomething: userInfo => {
-//       dispatch({ type: INSERT_USERINFO, user: userInfo });
-//     }
-//   };
-// };
-
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(InsertUserInfo);
 
 export default InsertUserInfo;
