@@ -3,8 +3,8 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
-  AsyncStorage
+  TouchableOpacity
+  // AsyncStorage
 } from "react-native";
 
 export default class StartScreen extends Component {
@@ -14,7 +14,6 @@ export default class StartScreen extends Component {
 
   // FIXME: 출시 전 꼭 실행시켜야함. 초기 로그인 시 App 실행시 바로 Home으로 가는 코드
   // componentDidMount() {
-  //   // this.props.insertUserInfo();
   //   AsyncStorage.getItem("username").then(value => {
   //     if (value != null) {
   //       console.log(value);

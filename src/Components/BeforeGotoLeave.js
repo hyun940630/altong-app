@@ -18,8 +18,12 @@ export default class BeforeGotoLeave extends Component {
     };
   }
 
+  handleIsWorkingT = () => this.setState({ isWorking: false });
+  handleIsWorkingF = () => this.setState({ isWorking: true });
+
   render() {
     const { name, onPress, balance, timer } = this.props;
+    const { isWorking } = this.state;
 
     return (
       <View style={styles.container}>
@@ -56,30 +60,63 @@ export default class BeforeGotoLeave extends Component {
               </Text>
             </TouchableOpacity>
 
-            <View
+            {isWorking ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: 40
+                }}
+              >
+                <Text style={styles.smallText}>현재 </Text>
+                <Text style={[styles.smallText, { fontWeight: "bold" }]}>
+                  {timer}
+                </Text>
+                <Text style={styles.smallText}> 근무하고 있어요.</Text>
+              </View>
+            ) : (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: 40
+                }}
+              >
+                <Text style={styles.smallText}>오늘 </Text>
+                <Text style={[styles.smallText, { fontWeight: "bold" }]}>
+                  {timer}
+                </Text>
+                <Text style={styles.smallText}> 근무하셨어요.</Text>
+              </View>
+            )}
+          </View>
+          {isWorking ? (
+            <TouchableOpacity
               style={{
                 flexDirection: "row",
-                justifyContent: "center",
-                marginBottom: 40
+                alignItems: "center",
+                justifyContent: "center"
               }}
+              onPress={onPress}
+              onPressOut={this.handleIsWorkingT}
             >
-              <Text style={styles.smallText}>현재 </Text>
-              <Text style={[styles.smallText, { fontWeight: "bold" }]}>
-                {timer}
-              </Text>
-              <Text style={styles.smallText}> 근무하고 있어요.</Text>
-            </View>
-          </View>
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-            onPress={onPress}
-          >
-            <Text style={styles.gotoLeaveBtn}>퇴근하기</Text>
-          </TouchableOpacity>
+              <Text style={styles.gotoLeaveBtn}>퇴근하기</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+              onPress={onPress}
+              onPressOut={this.handleIsWorkingF}
+            >
+              <Text style={styles.gotoLeaveBtn}>출근하기</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </View>
     );

@@ -74,7 +74,7 @@ export default class ProfileTab extends Component {
                   {username}
                 </Text>
                 {/* <Text style={{ fontSize: 14, color: "#FFFFFF" }}>
-                  010-2553-1234
+                  010-0000-0000
                 </Text> */}
                 <TouchableOpacity>
                   <Text

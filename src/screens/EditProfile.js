@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   AsyncStorage
 } from "react-native";
-import Icon from "react-native-vector-icons/Feather";
+import Icon from "react-native-vector-icons/Octicons";
 import MapIcon from "react-native-vector-icons/FontAwesome5";
 import MapViewComponent from "../Components/MapViewComponent";
 import AsyncStorageModule from "../StorageModule/AsyncStorageModule";
@@ -85,10 +85,29 @@ class EditProfile extends Component {
             justifyContent: "center"
           }}
         >
-          <Image
+          {/* <Image
             source={require("../../assets/Image/logo.png")}
             style={styles.userImage}
-          ></Image>
+          ></Image> */}
+          <TouchableOpacity
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              width: 64,
+              height: 64,
+              backgroundColor: "#3250AE",
+              borderRadius: 64
+            }}
+          >
+            <Icon
+              name="person"
+              style={{
+                fontSize: 54,
+
+                color: "#FFF"
+              }}
+            ></Icon>
+          </TouchableOpacity>
         </View>
 
         {this.state.showMap ? (
@@ -189,7 +208,11 @@ class EditProfile extends Component {
             onPress={() => alert("준비중입니다.")}
           >
             <Text
-              style={{ fontSize: 20, fontFamily: "noto-sans", color: "#CCC" }}
+              style={{
+                fontSize: 20,
+                fontFamily: "noto-sans",
+                color: "#CCC"
+              }}
             >
               은행을 선택하세요.
             </Text>
@@ -197,7 +220,11 @@ class EditProfile extends Component {
         </View>
 
         <View
-          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center"
+          }}
         >
           <TouchableOpacity
             style={styles.editBtn}

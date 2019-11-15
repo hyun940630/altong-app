@@ -11,14 +11,15 @@ export default class TimeLineTab extends Component {
     };
   }
 
-  componentDidMount = () => {
-    // Getting data in the AsyncStorage
+  componentDidMount = async () => {
     AsyncStorage.getItem("userworkplace").then(value =>
       this.setState({ userworkplace: value })
     );
   };
+
   render() {
     const { userworkplace } = this.state;
+
     return (
       <View style={styles.container}>
         <TitleCard name="근무기록" />
@@ -32,12 +33,15 @@ export default class TimeLineTab extends Component {
           >
             {userworkplace}
           </Text>
+
+          {/* TODO: 정상/결근/지각을 표기 */}
           {/* <Text style={styles.paperText}> </Text> */}
         </View>
+
+        {/* TODO: 사잇 날짜에 따른 근무기록 결과를 보여줌 */}
         {/* <DateArrangeComponent name="2019.07.01 ~ 2019.07.31" /> */}
+
         <WorkRecordItem />
-        {/* <WorkRecordItem />
-        <WorkRecordItem /> */}
       </View>
     );
   }

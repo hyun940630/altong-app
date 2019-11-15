@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, AsyncStorage } from "react-native";
-import AsyncStorageModule from "../../StorageModule/AsyncStorageModule";
+
 import DateComponent from "../DateComponent";
 import BeforeGotoWork from "../BeforeGotoWork";
 import BeforeGotoLeave from "../BeforeGotoLeave";
@@ -13,16 +13,21 @@ class HomeTab extends React.Component {
     this.state = {
       isWorking: false,
       checkPoint: false,
+      stopPoint: true,
       username: "",
       userworkplace: "",
       balance: 0,
       timeWorkedInMS: 0,
       startTime: "",
-      endTime: ""
+      endTime: "",
+      startTRaw: 0,
+      endTRaw: 0,
+      workingTime: "",
+      recordSalary: 0
     };
   }
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
     // Getting data in the AsyncStorage
     AsyncStorage.getItem("username").then(value =>
       this.setState({ username: value })
@@ -34,29 +39,86 @@ class HomeTab extends React.Component {
 
   componentWillUnmount = () => {
     this.setState({ isWorking: false }, () => {});
+    this._stopWorking();
   };
 
   _startWorking = () => {
-    this.setState({ isWorking: true });
-    this._recordStartTime();
+    this.setState({ isWorking: true }, () => {
+      this._recordStartTime();
+      this._recordStartTRaw();
+      this._startTimer();
+    });
   };
 
   _stopWorking = () => {
-    this.setState({ isWorking: false });
-    this._recordEndTime();
+    this.setState({ isWorking: false }, () => {
+      this.handleStopPoint();
+      this._recordEndTime();
+      this._recordEndTRaw();
+      this._recordSalary();
+      this._workingTimeFormat();
+    });
   };
 
-  _recordStartTime = () => {
-    const d = new Date();
-    value = d.getTime();
-    AsyncStorageModule.setItem("startTime", value);
-    this.setState({ startTime: value });
+  _recordStartTRaw = value => {
+    let now = new Date();
+    value = now.getTime();
+    AsyncStorage.setItem("startTRaw", value);
+    this.setState({ startTRaw: value });
   };
 
-  _recordEndTime = () => {
-    const d = new Date();
-    value = d.getTime();
-    AsyncStorageModule.setItem("endTime", value);
+  _recordEndTRaw = value => {
+    let now = new Date();
+    value = now.getTime();
+    AsyncStorage.setItem("endTRaw", value);
+    this.setState({ endTRaw: value });
+  };
+
+  _workingTimeFormat = value => {
+    let hour,
+      min,
+      sec = 0;
+
+    let date1 = this.state.startTRaw;
+    let date2 = this.state.endTRaw;
+    let diffTime = date2 - date1;
+
+    // hour = Math.floor(timeInMS / 3600000);
+    // timeInMS = timeInMS - 3600000 * hour;
+    // min = Math.floor(timeInMS / 60000);
+    // timeInMS = timeInMS - 60000 * min;
+    // sec = Math.floor(timeInMS / 1000);
+    // timeInMS = timeInMS - 1000 * sec;
+    // deciSec = Math.floor(timeInMS / 100);
+
+    hour = Math.floor(diffTime / 3600000);
+    min = Math.floor(diffTime / 60000);
+    sec = Math.floor(diffTime / 1000);
+
+    value = `${hour}:${min}:${sec}`;
+    AsyncStorage.setItem("workingTime", value);
+    this.setState({ workingTime: value });
+  };
+
+  _recordSalary = value => {
+    value = this._getFormattedBalance();
+    AsyncStorage.setItem("recordSalary", value);
+    this.setState({ recordSalary: value });
+  };
+
+  _recordStartTime = value => {
+    let now = new Date();
+    value = now.toLocaleTimeString();
+    // value = tempTime + 32400000; // 32400000 = 9 hours
+    AsyncStorage.setItem("startTime", value);
+    this.setState({ startTime: value }); // number
+    // console.log(new Date(value + 32400000).toUTCString()); // 날짜 포멧이 나옴
+  };
+
+  _recordEndTime = value => {
+    let now = new Date();
+    value = now.toLocaleTimeString();
+    AsyncStorage.setItem("endTime", value); // value is Number
     this.setState({ endTime: value });
   };
 
@@ -86,55 +148,61 @@ class HomeTab extends React.Component {
   };
 
   _getFormattedBalance = () => {
-    // await this.setState({balance: });
-
     return this._formatMoney(
       Math.floor((this.props.wage / 3600000) * this.state.timeWorkedInMS)
     );
   };
 
-  _formatMoney(num) {
+  _formatMoney = num => {
     if (isNaN(num)) {
       return "NaN";
     }
     return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
-  }
-
-  // handleStart = () => this.setState({ isWorking: true });
-
-  // handleEnd = () => this.setState({ isWorking: false, checkPoint: false });
+  };
 
   handleCheckPoint = () => this.setState({ checkPoint: true });
+  handleStopPoint = () => this.setState({ stopPoint: false });
 
   render() {
-    const { isWorking, checkPoint } = this.state;
-
-    console.log(this.state.startTime + " " + this.state.endTime);
+    const { isWorking, checkPoint, stopPoint } = this.state;
 
     return (
       <>
-        <View style={styles.dateCom}>
-          <DateComponent style={styles.dateStyle} />
-        </View>
         {isWorking ? (
           checkPoint ? (
-            <BeforeGotoLeave
-              name={this.state.username}
-              workplace={this.state.userworkplace}
-              onPress={this._stopWorking}
-              balance={this._getFormattedBalance()}
-              timer={this._getFormattedTime()}
-            />
-          ) : (
-            <MapViewComponent onPress={this.handleCheckPoint} />
-          )
+            <View style={styles.dateCom}>
+              <DateComponent style={styles.dateStyle} />
+            </View>
+          ) : null
         ) : (
+          <View style={styles.dateCom}>
+            <DateComponent style={styles.dateStyle} />
+          </View>
+        )}
+
+        {isWorking ? null : stopPoint ? (
           <BeforeGotoWork
             name={this.state.username}
             workplace={this.state.userworkplace}
             onPress={this._startWorking}
           />
-        )}
+        ) : null}
+
+        {isWorking ? (
+          checkPoint ? null : (
+            <MapViewComponent onPress={this.handleCheckPoint} />
+          )
+        ) : null}
+
+        {checkPoint ? (
+          <BeforeGotoLeave
+            name={this.state.username}
+            workplace={this.state.userworkplace}
+            onPress={this._stopWorking}
+            balance={this._getFormattedBalance()}
+            timer={this._getFormattedTime()}
+          />
+        ) : null}
       </>
     );
   }
@@ -144,7 +212,7 @@ const styles = StyleSheet.create({
   dateCom: {
     height: 50,
     marginTop: 50,
-    marginBottom: 50,
+    marginBottom:
     justifyContent: "center"
   },
   dateStyle: {

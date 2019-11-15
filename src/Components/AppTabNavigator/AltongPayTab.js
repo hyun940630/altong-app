@@ -9,7 +9,8 @@ export default class AltongPayTab extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: ""
+      username: "",
+      recordSalary: 0
     };
   }
 
@@ -18,9 +19,14 @@ export default class AltongPayTab extends Component {
     AsyncStorage.getItem("username").then(value =>
       this.setState({ username: value })
     );
+
+    AsyncStorage.getItem("recordSalary").then(value =>
+      this.setState({ recordSalary: value })
+    );
   };
 
   render() {
+    const { recordSalary } = this.state;
     return (
       <View style={styles.container}>
         <TitleCard name="알통페이" />
@@ -31,7 +37,7 @@ export default class AltongPayTab extends Component {
               {this.state.username}님의 총 알통페이
             </Text>
             {/* <Text style={styles.altongpay}>{this.state.money}원</Text> */}
-            <Text style={styles.altongpayTemp}>준비중입니다.</Text>
+            <Text style={styles.altongpayTemp}>{recordSalary}</Text>
           </View>
           <View style={styles.possiblePayView}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -42,7 +48,7 @@ export default class AltongPayTab extends Component {
               ></Icon>
             </View>
 
-            <Text style={styles.possiblePay}>{this.state.money}원</Text>
+            <Text style={styles.possiblePay}>{recordSalary}원</Text>
           </View>
         </View>
         {/* <DateArrangeComponent name="2019.07.01 ~ 2019.07.31" /> */}

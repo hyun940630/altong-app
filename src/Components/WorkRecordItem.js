@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, AsyncStorage } from "react-native";
-import AsyncStorageModule from "../StorageModule/AsyncStorageModule";
-import DateComponent from "../Components/DateComponent";
+// import DateComponent from "../Components/DateComponent";
 
 class Des extends Component {
   constructor(props) {
@@ -20,9 +19,10 @@ class Des extends Component {
       >
         <Text
           style={{
-            width: 60,
+            width: 70,
             fontSize: 16,
-            fontFamily: "noto-sans"
+            fontFamily: "noto-sans",
+            textAlign: "center"
           }}
         >
           {this.props.name}
@@ -36,13 +36,17 @@ export default class WorkRecordItem extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      todayDate: "",
       startTime: "",
       endTime: "",
-      workingHours: ""
+      recordSalary: 0,
+      startTRaw: 0,
+      endTRaw: 0,
+      workingTime: ""
     };
   }
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
     // Getting data in the AsyncStorage
     AsyncStorage.getItem("startTime").then(value =>
       this.setState({ startTime: value })
@@ -50,16 +54,49 @@ export default class WorkRecordItem extends Component {
     AsyncStorage.getItem("endTime").then(value =>
       this.setState({ endTime: value })
     );
-    AsyncStorageModule.getItem("startTime");
-    AsyncStorageModule.getItem("endTime");
+    AsyncStorage.getItem("recordSalary").then(value =>
+      this.setState({ recordSalary: value })
+    );
+    AsyncStorage.getItem("workingTime").then(value =>
+      this.setState({ workingTime: value })
+    );
+    // AsyncStorage.setItem("gapTime", value);
+    // this.setState({ gapTime: value });
+    this._todayDateFormat();
   };
 
+  _todayDateFormat = value => {
+    let now = new Date();
+    value = now.toLocaleDateString();
+    AsyncStorage.setItem("todayDate", value);
+    this.setState({ todayDate: value });
+  };
+
+  // _timeGapFormat = value => {
+  //   let date1 = new Date(startTime);
+  //   let date2 = new Date(endTime);
+  //   let diffTime = date2.getTime() - date1.getTime();
+  //   let sec_gap = diffTime / 1000;
+  //   let min_gap = diffTime / 1000 / 60;
+  //   let hour_gap = diffTime / 1000 / 60 / 60;
+
+  //   value = `${hour_gap}:${min_gap}:${sec_gap}`;
+  //   AsyncStorage.setItem("gapTime", value);
+  //   this.setState({ gapTime: gapTime });
+  // };
+
   render() {
-    const { startTime, endTime } = this.state;
-    const workingHours = endTime - startTime;
+    const {
+      todayDate,
+      startTime,
+      endTime,
+      recordSalary,
+      workingTime
+    } = this.state;
+
     return (
       <View style={styles.recGroup}>
-        <Text style={styles.title}>2019.11.12 정상</Text>
+        <Text style={styles.title}>{todayDate}</Text>
 
         <View style={styles.desLayout}>
           <View
@@ -87,12 +124,10 @@ export default class WorkRecordItem extends Component {
           >
             {/* <Des name={startTime} /> */}
 
-            {/* <Des name={endTime} />
-            <Des name={workingHours} /> */}
-            <Text>{startTime}</Text>
-            <Text>{endTime}</Text>
-            <Text>{workingHours}</Text>
-            <Des name="0원" />
+            <Des name={startTime} />
+            <Des name={endTime} />
+            <Des name={workingTime} />
+            <Des name={recordSalary} />
           </View>
         </View>
       </View>

@@ -18,7 +18,12 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
-    }
+      "supportsTablet": true,
+      "bundleIdentifier": "com.egg.xtring"
+    },
+    "android": {
+      "package": "com.egg.xtring"
+    },
+    "description": ""
   }
 }

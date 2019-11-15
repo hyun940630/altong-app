@@ -5,80 +5,92 @@ import {
   StyleSheet,
   Dimensions,
   TouchableHighlight,
-  Alert,
   AsyncStorage
 } from "react-native";
 import MapView from "react-native-maps";
-import * as Location from "expo-location";
-import Icon from "react-native-vector-icons/Ionicons";
+// import * as Location from 'expo-location'
+// import Icon from 'react-native-vector-icons/Ionicons'
+// import AsyncStorageModule from '../StorageModule/AsyncStorageModule'
 
 export default class MapViewComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       userworkplace: "",
-      coords: { latitude: 37.5072141, longitude: 127.0605913 }
+      latitude: null,
+      longitude: null
     };
   }
 
   componentDidMount = () => {
-    this.getLocation();
+    this._getCurrentGeolocation();
+    // this.getLocation()
+    AsyncStorage.getItem("userworkplace").then(value =>
+      this.setState({ userworkplace: value })
+    );
   };
 
-  getLocation = async () => {
+  _getCurrentGeolocation = async () => {
     try {
-      await Location.requestPermissionsAsync();
-      const {
-        coords: { latitude, longitude }
-      } = await Location.getCurrentPositionAsync();
-
-      // Getting data in the AsyncStorage
-      AsyncStorage.getItem("latitude").then(value =>
-        this.setState({ latitude: { value } })
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          this.setState({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          });
+        },
+        error => alert("위치를 찾지 못했어요😥", error),
+        { enableHighAccuracy: true, timeout: 20000 }
       );
-      AsyncStorage.getItem("longitude").then(value =>
-        this.setState({ longitude: { value } })
-      );
-      console.log(latitude + " " + longitude);
-
-      navigator.geolocation.watchPosition(coords => {
-        this.setState({ coords });
+      navigator.geolocation.watchPosition(position => {
+        this.setState({ position });
       });
-      // Send to API and get weather!
     } catch (error) {
-      Alert.alert("Can't find you.", "So sad");
+      Alert.alert("위치를 찾지 못했어요😥", "GPS가 켜져있는지 확인해 주세요!");
     }
+  };
+
+  componentWillUnmount = async () => {
+    this._getCurrentGeolocation();
   };
 
   render() {
     const { onPress } = this.props;
+    // const { userworkplace } = this.state
     return (
-      <View style={styles.container}>
-        <MapView
-          style={styles.mapStyle}
-          initialRegion={{
-            latitude: this.state.coords.latitude,
-            longitude: this.state.coords.longitude,
-            latitudeDelta: 0.006,
-            longitudeDelta: 0.006
-          }}
-        >
-          <MapView.Marker
-            coordinate={{
-              latitude: this.state.coords.latitude,
-              longitude: this.state.coords.longitude
+      this.state.latitude !== null && (
+        <View style={styles.container}>
+          <MapView
+            style={styles.mapStyle}
+            initialRegion={{
+              latitude: this.state.latitude,
+              longitude: this.state.longitude,
+              latitudeDelta: 0.0045,
+              longitudeDelta: 0.0045
             }}
-            title="피플러스"
-          />
-        </MapView>
+          >
+            <MapView.Marker
+              coordinate={{
+                latitude: this.state.latitude,
+                longitude: this.state.longitude
+              }}
+              // title={userworkplace}
+            />
+          </MapView>
 
-        <View style={{ flexDirection: "row", marginTop: -100 }}>
-          <Text style={styles.text}>이곳에서 근무하시나요?</Text>
-          <TouchableHighlight onPress={onPress}>
-            <Text style={styles.textcheck}>확인</Text>
-          </TouchableHighlight>
+          <View
+            style={{
+              flexDirection: "row",
+              marginTop: 100
+            }}
+          >
+            <Text style={styles.text}>이곳에서 근무하시나요?</Text>
+            <TouchableHighlight onPress={onPress}>
+              <Text style={styles.textcheck}>확인</Text>
+            </TouchableHighlight>
+          </View>
         </View>
-      </View>
+      )
     );
   }
 }
@@ -94,7 +106,7 @@ const styles = StyleSheet.create({
   },
   mapStyle: {
     width: Dimensions.get("window").width / 1,
-    height: Dimensions.get("window").height / 1.4,
+    height: Dimensions.get("window").height / 1,
     position: "absolute",
     top: 0,
     left: 0,
