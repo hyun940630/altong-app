@@ -5,7 +5,8 @@ import {
   StyleSheet,
   Dimensions,
   TouchableHighlight,
-  AsyncStorage
+  AsyncStorage,
+  StatusBar
 } from "react-native";
 import MapView from "react-native-maps";
 // import * as Location from 'expo-location'
@@ -16,6 +17,7 @@ export default class MapViewComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      todayDate: "",
       userworkplace: "",
       latitude: null,
       longitude: null
@@ -27,6 +29,9 @@ export default class MapViewComponent extends Component {
     // this.getLocation()
     AsyncStorage.getItem("userworkplace").then(value =>
       this.setState({ userworkplace: value })
+    );
+    AsyncStorage.getItem("todayDate").then(value =>
+      this.setState({ todayDate: value })
     );
   };
 
@@ -55,18 +60,20 @@ export default class MapViewComponent extends Component {
   };
 
   render() {
+    const { userworkplace, todayDate } = this.state;
     const { onPress } = this.props;
-    // const { userworkplace } = this.state
+
     return (
       this.state.latitude !== null && (
         <View style={styles.container}>
+          <StatusBar style={{ backgroundColor: "#FFF", opacity: 100 }} />
           <MapView
             style={styles.mapStyle}
             initialRegion={{
               latitude: this.state.latitude,
               longitude: this.state.longitude,
-              latitudeDelta: 0.0045,
-              longitudeDelta: 0.0045
+              latitudeDelta: 0.0065,
+              longitudeDelta: 0.0065
             }}
           >
             <MapView.Marker
@@ -78,14 +85,22 @@ export default class MapViewComponent extends Component {
             />
           </MapView>
 
-          <View
-            style={{
-              flexDirection: "row",
-              marginTop: 100
-            }}
-          >
-            <Text style={styles.text}>이곳에서 근무하시나요?</Text>
-            <TouchableHighlight onPress={onPress}>
+          <View style={styles.mapMakerDes}>
+            <Text
+              style={[
+                styles.text,
+                { textAlign: "center", fontWeight: "center" }
+              ]}
+            >
+              {userworkplace}
+            </Text>
+            <View style={styles.line}></View>
+            <Text style={styles.text}>{todayDate}</Text>
+            <Text style={styles.textQuestion}>근무지가 맞나요?</Text>
+            <TouchableHighlight
+              style={styles.textCheckLayout}
+              onPress={onPress}
+            >
               <Text style={styles.textcheck}>확인</Text>
             </TouchableHighlight>
           </View>
@@ -113,23 +128,48 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0
   },
-  text: {
-    backgroundColor: "#FFF",
-    color: "#3250AE",
-    padding: 5,
-    borderRadius: 12,
-    fontSize: 20,
-    marginRight: 10
+  mapMakerDes: {
+    position: "absolute",
+    marginTop: 100,
+    top: 0,
+    left: 50,
+    right: 50,
+    backgroundColor: "#3250AE",
+    borderColor: "#3250AE",
+    borderRadius: 10,
+    borderWidth: 1
   },
-  textcheck: {
+  line: {
+    borderColor: "#CCCCCC90",
+    borderWidth: 0.3
+  },
+  text: {
+    color: "#FFFFFF",
+    padding: 4,
+    fontSize: 13,
+    fontFamily: "noto-sans-bold"
+  },
+  textQuestion: {
+    color: "#FFFFFF",
+    fontFamily: "noto-sans",
+    fontSize: 18,
+    paddingLeft: 4,
+    paddingRight: 4,
+    paddingTop: 2,
+    paddingBottom: 2
+  },
+  textCheckLayout: {
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#3250AE",
-    color: "#FFF",
-    padding: 5,
-    borderRadius: 12,
-    fontSize: 20,
-    fontWeight: "bold",
+    backgroundColor: "#f9f9f9",
+    borderRadius: 6,
+    margin: 4
+  },
+  textcheck: {
+    color: "#3250AE",
+    fontFamily: "noto-sans-bold",
+    fontSize: 15,
+    padding: 4,
     zIndex: 1000
   }
 });

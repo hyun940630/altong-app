@@ -212,8 +212,7 @@ const styles = StyleSheet.create({
   dateCom: {
     height: 50,
     marginTop: 50,
-    marginBottom:
-    justifyContent: "center"
+    marginBottom: 50
   },
   dateStyle: {
     paddingLeft: 24,

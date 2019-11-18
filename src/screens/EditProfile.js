@@ -3,12 +3,13 @@ import {
   View,
   Text,
   TextInput,
-  Image,
   StyleSheet,
   TouchableOpacity,
-  AsyncStorage
+  AsyncStorage,
+  Modal
 } from "react-native";
 import Icon from "react-native-vector-icons/Octicons";
+import IconRight from "react-native-vector-icons/SimpleLineIcons";
 import MapIcon from "react-native-vector-icons/FontAwesome5";
 import MapViewComponent from "../Components/MapViewComponent";
 import AsyncStorageModule from "../StorageModule/AsyncStorageModule";
@@ -21,6 +22,7 @@ class EditProfile extends Component {
       userworkplace: "",
       appDes: false,
       pncheck: false,
+      inputBank: false,
       showMap: false,
       onchangeWorkplace: false
     };
@@ -65,30 +67,46 @@ class EditProfile extends Component {
     AsyncStorageModule.setItem("userworkplace", value);
   };
 
+  _showInputBank = () => {
+    this.setState({ inputBank: true });
+  };
+
+  _hideInputBank = () => {
+    this.setState({ inputBank: false });
+  };
+
   render() {
     const { navigate } = this.props.navigation;
     const { username, userworkplace } = this.state;
 
     return (
       <View style={styles.container}>
-        {/* <TouchableOpacity
+        {this.state.showMap ? (
+          <MapViewComponent onPress={this._toggleDontShowMap} />
+        ) : null}
+        <TouchableOpacity
           style={styles.cancelBtn}
           onPress={() => navigate("Profile")}
         >
-          <Icon name="x" style={{ fontSize: 30, color: "#3250AE" }}></Icon>
-        </TouchableOpacity> */}
+          <Icon name="x" style={{ fontSize: 22, color: "#3250AE" }}></Icon>
+        </TouchableOpacity>
 
+        <Text
+          style={{
+            fontSize: 20,
+            fontFamily: "noto-sans-bold",
+            textAlign: "center"
+          }}
+        >
+          개인정보 수정하기
+        </Text>
         <View
           style={{
-            flex: 1,
+            height: 120,
             alignItems: "center",
             justifyContent: "center"
           }}
         >
-          {/* <Image
-            source={require("../../assets/Image/logo.png")}
-            style={styles.userImage}
-          ></Image> */}
           <TouchableOpacity
             style={{
               alignItems: "center",
@@ -109,10 +127,6 @@ class EditProfile extends Component {
             ></Icon>
           </TouchableOpacity>
         </View>
-
-        {this.state.showMap ? (
-          <MapViewComponent onPress={this._toggleDontShowMap} />
-        ) : null}
 
         <View style={styles.userInfo}>
           <View
@@ -164,8 +178,8 @@ class EditProfile extends Component {
             placeholder={username}
             onChangeText={this._setName}
           />
-          {/* <TextInput style={styles.textInput} placeholder="남자" />
-          <TextInput style={styles.textInput} placeholder="EGG@email.com" /> */}
+          {/* <TextInput style={styles.textInput} placeholder="남자" /> */}
+          <TextInput style={styles.textInput} placeholder="이메일" />
           <View
             style={{
               flexDirection: "row",
@@ -175,14 +189,14 @@ class EditProfile extends Component {
           >
             <TextInput
               style={[styles.textInput, { flex: 2 }]}
-              placeholder="010-0000-0000"
+              placeholder="전화번호"
             />
             <TouchableOpacity
               style={{
                 flex: 1,
                 borderRadius: 20,
                 borderColor: "#3250AE",
-                borderWidth: 2,
+                borderWidth: 1.5,
                 alignItems: "center"
               }}
               onPress={this._togglephoneNumberCheck}
@@ -191,8 +205,8 @@ class EditProfile extends Component {
                 style={{
                   fontSize: 15,
                   color: "#3250AE",
-                  fontFamily: "noto-sans-bold",
-                  padding: 5
+                  fontFamily: "noto-sans",
+                  padding: 4
                 }}
               >
                 인증번호 발송
@@ -202,21 +216,119 @@ class EditProfile extends Component {
           {this.state.pncheck ? (
             <TextInput style={styles.textInput} placeholder="인증번호 입력" />
           ) : null}
-
-          <TouchableOpacity
-            style={styles.textInput}
-            onPress={() => alert("준비중입니다.")}
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              height: 36,
+              fontFamily: "noto-sans",
+              color: "#CCC",
+              marginTop: 10,
+              borderBottomColor: "#CCC",
+              borderBottomWidth: 2
+            }}
           >
-            <Text
-              style={{
-                fontSize: 20,
-                fontFamily: "noto-sans",
-                color: "#CCC"
-              }}
-            >
+            <Text style={{ color: "#CCC", fontSize: 16 }}>
               은행을 선택하세요.
             </Text>
-          </TouchableOpacity>
+            {this.state.inputBank ? (
+              <TouchableOpacity>
+                <IconRight
+                  name="arrow-down"
+                  style={{
+                    fontSize: 17,
+                    color: "#3250AE",
+                    padding: 5
+                  }}
+                ></IconRight>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity onPress={this._showInputBank}>
+                <IconRight
+                  name="arrow-right"
+                  style={{
+                    fontSize: 17,
+                    color: "#3250AE",
+                    padding: 5
+                  }}
+                ></IconRight>
+              </TouchableOpacity>
+            )}
+          </View>
+          {this.state.inputBank ? (
+            <View
+              style={{
+                borderWidth: 1.5,
+                borderTopWidth: 0,
+                borderColor: "#3250AE",
+                borderBottomLeftRadius: 8,
+                borderBottomRightRadius: 8,
+                backgroundColor: "#3250AE",
+                borderTopColor: "#FFF",
+                paddingTop: 5,
+                paddingBottom: 5,
+                paddingLeft: 10,
+                padingRight: 10
+              }}
+            >
+              <View
+                style={{
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  justifyContent: "space-around",
+                  alignItems: "center",
+                  height: 26
+                }}
+              >
+                <TouchableOpacity>
+                  <Text style={styles.bankName}>국민</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Text style={styles.bankName}>우리</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Text style={styles.bankName}>신한</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Text style={styles.bankName}>하나</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Text style={styles.bankName}>기업</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Text style={styles.bankName}>농협</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ flexDirection: "row", padding: 10 }}>
+                <TextInput
+                  style={styles.bankAcount}
+                  placeholder="계좌번호을 입력해주세요."
+                />
+                <TouchableOpacity
+                  style={{
+                    flex: 1,
+                    borderRadius: 20,
+                    borderColor: "#FFF",
+                    borderWidth: 1.5,
+                    alignItems: "center"
+                  }}
+                  onPress={this._hideInputBank}
+                >
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      color: "#FFF",
+                      fontFamily: "noto-sans",
+                      padding: 4
+                    }}
+                  >
+                    완료
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : null}
         </View>
 
         <View
@@ -232,7 +344,7 @@ class EditProfile extends Component {
           >
             <Text
               style={{
-                fontSize: 34,
+                fontSize: 28,
                 fontFamily: "noto-sans-bold",
                 color: "#3250AE"
               }}
@@ -256,7 +368,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-end",
     marginRight: 24,
-    marginTop: 36
+    marginTop: 48
   },
   userImage: {
     width: 84,
@@ -274,8 +386,8 @@ const styles = StyleSheet.create({
   textInput: {
     alignItems: "center",
     justifyContent: "center",
-    height: 50,
-    fontSize: 20,
+    height: 36,
+    fontSize: 16,
     fontFamily: "noto-sans",
     color: "#CCC",
     marginTop: 10,
@@ -283,9 +395,27 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2
   },
   text: {
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: "noto-sans-bold",
     color: "#333"
+  },
+  bankName: {
+    fontSize: 15,
+    fontFamily: "noto-sans-bold",
+    color: "#FFF"
+  },
+  bankAcount: {
+    flex: 3,
+    fontFamily: "noto-sans-bold",
+    fontSize: 14,
+    color: "#FFF",
+    borderBottomColor: "#FFF",
+    borderBottomWidth: 1.5,
+    marginLeft: 6,
+    marginRight: 6
+  },
+  bankInputBtn: {
+    flex: 1
   }
 });
 
